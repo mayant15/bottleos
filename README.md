@@ -26,4 +26,5 @@ qemu-system-i386 -kernel sysroot/boot/bottleos.kernel
 ```
 
 ## References
-- [OSDev](https://wiki.osdev.org/Main_Page)
+- https://wiki.osdev.org/Main_Page
+- http://www.osdever.net/tutorials
