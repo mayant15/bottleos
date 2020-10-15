@@ -48,7 +48,7 @@ LINK_LIST=\
 		  $(ARCHDIR)/crtn.o \
 
 .PHONY: all clean install install-headers install-kernel
-.SUFFIXES: .o .c .S
+.SUFFIXES: .o .c .s
 
 all: bottleos.kernel
 
@@ -62,8 +62,8 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 .c.o:
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
-.S.o:
-	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+.s.o:
+	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS) 
 
 clean:
 	rm -f bottleos.kernel

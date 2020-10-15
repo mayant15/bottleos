@@ -12,26 +12,19 @@
 .long FLAGS
 .long CHECKSUM
 
-# Create a 16KiB stack for the initial thread
-# .section .bss
-# .align 16
-# stack_bottom:
-# .skip 163843
-# stack_top:
-
 .section .data
 gdt:
-gdt_null: # Null segment, required by the specification
+gdt_null: 			# Null segment, required by the specification
 	.long 0
 	.long 0
-gdt_code: # Code segment starts at zero and covers the entire 4GB address space
+gdt_code: 			# Code segment starts at zero and covers the entire 4GB address space
 	.short 0xFFFF       # 4GB limit
 	.short 0			# Starts at 0
 	.byte  0			# Bits 16-23 in the base address, required by the specification
 	.byte  0b10011010   # Configuration flags for the code segment. This is a readable executable non-conforming segment
 	.byte  0b11001111   # Configure to use 4KiB granularity and 32-bit protected mode, as opposed to 16-bit
 	.byte  0			# Bits 24-31 in the base address, required by the specification
-gdt_data: # Data segment starts at zero and covers the entire 4GB address space
+gdt_data: 			# Data segment starts at zero and covers the entire 4GB address space
 	.short 0xFFFF       # 4GB limit
 	.short 0			# Starts at 0
 	.byte  0			# Bits 16-23 in the base address, required by the specification
@@ -47,8 +40,8 @@ gdt_desc:
 .section .text
 .global _start
 .type _start, @function # This here is a 'symbol attribute' that provides debug info
-_start:
-	 /* 
+_start:	
+	/* 
        This is a good place to initialize crucial processor state before the
        high-level kernel is entered. It is best to minimize the early
        environment where crucial features are offline. Note that the
@@ -80,7 +73,10 @@ pmode_main:
 	mov %eax, %gs
 
 	# Set the stack
-	mov $0x8000, %esp
+	mov $stack_top, %esp
+
+	# Load the IDT
+    call idt_install
 
 	# TODO: Enable paging
 	sti
@@ -91,10 +87,18 @@ pmode_main:
 	# Transfer control to the main kernel.
 	call kernel_main
 
-	# TODO: Hang if kernel_main unexpectedly returns?
+	# Hang if kernel_main unexpectedly returns
 	cli
+	hlt
 hang:
 	jmp hang
 
 # Set size of the _start symbol to simplify debugging
 .size _start, . - _start
+
+# Create a 16KiB stack for the initial thread
+.section .bss
+.align 16
+stack_bottom:
+.skip 163843
+stack_top:

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <kernel/tty.h>
+#include <stdint.h>
 
 
 /**
@@ -12,5 +13,7 @@ void kernel_main(void)
 {
     terminal_initialize();
     printf("Hello, kernel world!\n");
+    uint8_t d = 5 / 0;
+    printf("%d", d);
 }
 
