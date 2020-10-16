@@ -77,8 +77,6 @@ pmode_main:
 
 	# Load the IDT
     call idt_install
-
-	# TODO: Enable paging
 	sti
 
 	# Call the global constructors.

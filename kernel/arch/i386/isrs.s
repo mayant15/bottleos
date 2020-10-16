@@ -6,7 +6,7 @@ idt_load:
     lidt idtp
     ret
 
-# Declare all ISRs
+# Exceptions
 .global _isr0
 .global _isr1
 .global _isr2
@@ -39,6 +39,24 @@ idt_load:
 .global _isr29
 .global _isr30
 .global _isr31
+
+# Hardware interrupts
+.global _irq0
+.global _irq1
+.global _irq2
+.global _irq3
+.global _irq4
+.global _irq5
+.global _irq6
+.global _irq7
+.global _irq8
+.global _irq9
+.global _irq10
+.global _irq11
+.global _irq12
+.global _irq13
+.global _irq14
+.global _irq15
 
 # ISR 0: Divide by zero exception
 _isr0:
@@ -254,4 +272,102 @@ isr_common_stub:
     popl %ds
     popa
     add $0x08, %esp   # Advance to overwrite the error code and the ISR number
+    iret
+
+
+# Hardware interrupts will not push an error code, so push a dummy code instead
+_irq0:
+    cli
+    pushl $0x00
+    pushl $0x20 # Push their position in the IDT, not the actual IRQ number
+    jmp irq_common_stub
+_irq1:
+    cli
+    pushl $0x00
+    pushl $0x21
+    jmp irq_common_stub
+_irq2:
+    cli
+    pushl $0x00
+    pushl $0x22
+    jmp irq_common_stub
+_irq3:
+    cli
+    pushl $0x00
+    pushl $0x23
+    jmp irq_common_stub
+_irq4:
+    cli
+    pushl $0x00
+    pushl $0x24
+    jmp irq_common_stub
+_irq5:
+    cli
+    pushl $0x00
+    pushl $0x25
+    jmp irq_common_stub
+_irq6:
+    cli
+    pushl $0x00
+    pushl $0x26
+    jmp irq_common_stub
+_irq7:
+    cli
+    pushl $0x00
+    pushl $0x27
+    jmp irq_common_stub
+_irq8:
+    cli
+    pushl $0x00
+    pushl $0x28
+    jmp irq_common_stub
+_irq9:
+    cli
+    pushl $0x00
+    pushl $0x29
+    jmp irq_common_stub
+_irq10:
+    cli
+    pushl $0x00
+    pushl $0x2A
+    jmp irq_common_stub
+_irq11:
+    cli
+    pushl $0x00
+    pushl $0x2B
+    jmp irq_common_stub
+_irq12:
+    cli
+    pushl $0x00
+    pushl $0x2C
+    jmp irq_common_stub
+_irq13:
+    cli
+    pushl $0x00
+    pushl $0x2D
+    jmp irq_common_stub
+_irq14:
+    cli
+    pushl $0x00
+    pushl $0x2E
+    jmp irq_common_stub
+_irq15:
+    cli
+    pushl $0x00
+    pushl $0x2F
+    jmp irq_common_stub
+
+irq_common_stub:
+    pusha
+    pushl %ds
+    pushl %es
+    pushl %fs
+    pushl %gs
+    call irq_handler
+    popl %gs
+    popl %fs
+    popl %es
+    popl %ds
+    popa
+    add $0x08, %esp
     iret

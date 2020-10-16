@@ -1,3 +1,5 @@
-*.iso
+.vscode
+.build
 isodir
 sysroot
+*.iso
