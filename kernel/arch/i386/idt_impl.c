@@ -1,26 +1,31 @@
+/**
+ * @file idt_impl.c
+ * @brief Implements IDT installation
+ */
+
 #include "idt.h"
 #include "isrs.h"
 
 #include <string.h>
 
-/** Register a handler for software exceptions */
+/** @brief Register a handler for software exceptions */
 #define ISR_SET_IDT_ENTRY(x) idt_set_entry(x, (uint32_t)_isr##x, 0x08, 0x8E)
 
-/** Register a handler for hardware interrupts */
+/** @brief Register a handler for hardware interrupts */
 #define IRQ_SET_IDT_ENTRY(x) idt_set_entry(IRQ_OFFSET + x, (uint32_t)_irq##x, 0x08, 0x8E)
 
-/** C representation of the Interrupt Descriptor Table */
+/** @brief C representation of the Interrupt Descriptor Table */
 struct idt_entry idt[IDT_SIZE];
 
-/** C representation of the IDT handle */
+/** @brief C representation of the IDT handle */
 struct idt_ptr idtp;
 
 /**
  * @brief Set an entry in the Interrupt Descriptor Table
  * 
- * @param id Interrupt index to set
- * @param address Address of the handler function
- * @param selector Selector for the kernel's code segment
+ * @param id        Interrupt index to set
+ * @param address   Address of the handler function
+ * @param selector  Selector for the kernel's code segment
  * @param type_attr Configuration flags for this entry
  */
 void idt_set_entry(uint8_t id, uint32_t address, uint16_t selector, uint8_t type_attr)
@@ -35,7 +40,7 @@ void idt_set_entry(uint8_t id, uint32_t address, uint16_t selector, uint8_t type
     idt[id].offset_hi = hi;
 }
 
-/** Sets up and installs the IDT with all required handlers */
+/** @brief Sets up and installs the IDT with all required handlers */
 void idt_install()
 {
     // Initialize idt_entry arr

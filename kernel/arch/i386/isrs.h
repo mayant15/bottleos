@@ -1,9 +1,14 @@
-#ifndef ARCH_I386_ISRS_H
-#define ARCH_I386_ISRS_H
+/**
+ * @file isrs.h
+ * @brief Constructs for interrupt handlers
+ */
+
+#ifndef _ARCH_I386_ISRS_H
+#define _ARCH_I386_ISRS_H
 
 #include <stdint.h>
 
-/** Index in the IDT where IRQs start */
+/** @brief Index in the IDT where IRQs start */
 #define IRQ_OFFSET 32
 
 extern void idt_load();
@@ -60,29 +65,29 @@ extern void _irq13();
 extern void _irq14();
 extern void _irq15();
 
-/** State of the stack when an interrupt is triggered */
+/** @brief State of the stack when an interrupt is triggered */
 struct isr_state
 {
-    /** Segment registers */
+    /** @brief Segment registers */
     uint32_t gs, fs, es, ds;
 
-    /** General purpose registers */
+    /** @brief General purpose registers */
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
 
-    /** IDT row that this interrupt corresponds to */
+    /** @brief IDT row that this interrupt corresponds to */
     uint32_t id;
 
-    /** Error code pushed by the interrupt. Zero if no error code was pushed. */
+    /** @brief Error code pushed by the interrupt. Zero if no error code was pushed. */
     uint32_t err_code;
 
-    /** Program state registers, pushed by the processor */
+    /** @brief Program state registers, pushed by the processor */
     uint32_t eip, cs, eflags, useresp, ss;
 };
 
-/** Remaps IRQs to ids 32 to 47 in the IDT */
+/** @brief Remaps IRQs to ids 32 to 47 in the IDT */
 void irq_remap();
 
-/** Send a byte to the specified port */
+/** @brief Send a byte to the specified port */
 static inline void outb(uint16_t port, uint8_t data)
 {
     asm("outb %0, %1"
@@ -90,4 +95,4 @@ static inline void outb(uint16_t port, uint8_t data)
         : "r"(data), "Nd"(port));
 }
 
-#endif // ARCH_I386_ISRS_H
+#endif // _ARCH_I386_ISRS_H

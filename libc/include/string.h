@@ -1,3 +1,8 @@
+/**
+ * @file string.h
+ * @brief String manipulation utilities for the C library
+ */
+
 #ifndef _STRING_H
 #define _STRING_H
 
@@ -11,11 +16,14 @@ extern "C"
 #endif
 
     /**
-     * @brief 
+     * @brief Compare two memory locations, byte-by-byte
      * 
-     * @return int 
+     * @param a_ptr Pointer to the first location
+     * @param b_ptr Pointer to the second location
+     * @param size  Number of bytes to compare
+     * @return int  Returns signum(a/b - 1)
      */
-    int memcmp(const void *, const void *, size_t);
+    int memcmp(const void *a_ptr, const void *b_ptr, size_t size);
 
     /**
      * @brief Copies values from a source to the destination directly.
@@ -24,11 +32,12 @@ extern "C"
      * the source may be overwritten before they are copied. Use memmove() 
      * in that case instead of memcpy().
      * 
-     * @param __restrict 
-     * @param __restrict 
-     * @return void* 
+     * @param dest_ptr Pointer to the destination location
+     * @param src_ptr  Pointer to the source location
+     * @param size     Number of bytes to copy
+     * @return void*   Pointer to the source location
      */
-    void *memcpy(void *__restrict, const void *__restrict, size_t);
+    void *memcpy(void *__restrict dest_ptr, const void *__restrict src_ptr, size_t size);
 
     /**
      * @brief Copies values from a source to the destination, as if
@@ -42,18 +51,22 @@ extern "C"
     void *memmove(void *dest_ptr, const void *src_ptr, size_t size);
 
     /**
-     * @brief 
+     * @brief Set a given location to a value
      * 
-     * @return void* 
+     * @param buf_ptr Pointer to the start of the location that is to be set
+     * @param value   Value to be set in the provided location
+     * @param size    Number of bytes to be set
+     * @return void*  Pointer to the start of the location that was set
      */
-    void *memset(void *, int, size_t);
+    void *memset(void *buf_ptr, int value, size_t size);
 
     /**
-     * @brief Calculate the length of a string.
+     * @brief Calculate the length of a string
      * 
-     * @return size_t 
+     * @param str     Input string
+     * @return size_t Length of the input string
      */
-    size_t strlen(const char *);
+    size_t strlen(const char * str);
 
 #ifdef __cplusplus
 }

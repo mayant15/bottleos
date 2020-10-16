@@ -1,24 +1,29 @@
+/**
+ * @file isrs_impl.c
+ * @brief Implements routines that handle interrupts
+ */
+
 #include "isrs.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#define PIC_MASTER_COMMAND     0x20     /** Base and command port for the master PIC */
-#define PIC_MASTER_DATA        PIC_MASTER_COMMAND + 1
-#define PIC_MASTER_LINES       8        /** Number of interrupts that the master PIC can handle */
+#define PIC_MASTER_COMMAND     0x20                     /** @brief Base and command port for the master PIC */
+#define PIC_MASTER_DATA        PIC_MASTER_COMMAND + 1   /** @brief Data port for the master PIC */
+#define PIC_MASTER_LINES       8                        /** @brief Number of interrupts that the master PIC can handle */
 
-#define PIC_SLAVE_COMMAND      0xA0     /** Base and command port for the slave PIC */
-#define PIC_SLAVE_DATA         PIC_SLAVE_COMMAND + 1
-#define PIC_SLAVE_LINES        8        /** Number of interrupts that the slave PIC can handle */
+#define PIC_SLAVE_COMMAND      0xA0                     /** @brief Base and command port for the slave PIC */
+#define PIC_SLAVE_DATA         PIC_SLAVE_COMMAND + 1    /** @brief Data port for the slave PIC */
+#define PIC_SLAVE_LINES        8                        /** @brief Number of interrupts that the slave PIC can handle */
 
-#define PIC_INIT               0x10     /** Initialize the PIC chip */
-#define PIC_INIT_FLAG_USE_ICW4 0x01     /** Use fourth initialization word for environment configuration */
-#define PIC_ICW4_FLAG_8086     0x01     /** Use 8086/8088 mode as opposed to MCS-80/85 mode */
+#define PIC_INIT               0x10                     /** @brief Initialize the PIC chip */
+#define PIC_INIT_FLAG_USE_ICW4 0x01                     /** @brief Use fourth initialization word for environment configuration */
+#define PIC_ICW4_FLAG_8086     0x01                     /** @brief Use 8086/8088 mode as opposed to MCS-80/85 mode */
 
-#define PIC_EOI                0x20     /** Indicate that we're done handling the instruction */
+#define PIC_EOI                0x20                     /** @brief Indicate that we're done handling the instruction */
 
 
-/** Brief error messages printed out when an exception occurs */
+/** @brief Brief error messages printed out when an exception occurs */
 const char *exception_msg[] = {
     "Division By Zero",
     "Debug",
@@ -56,6 +61,7 @@ const char *exception_msg[] = {
     "Reserved",
     "Reserved"};
 
+/** @internal Print the state of the stack when an exception was called */
 void print_stack(struct isr_state *state)
 {
     printf("Stack: gs: %d, fs: %d, es: %d, ds: %d, edi: %d, esi: %d, ebp: %d, esp: %d, ebx: %d, edx: %d, ecx: %d, eax: %d, id: %d, err: %d, eip: %d, cs: %d, eflags: %d, usresp: %d, ss: %d",
@@ -82,6 +88,7 @@ void print_stack(struct isr_state *state)
 
 /**
  * @brief Handles software exceptions
+ * 
  * @param state State of the stack on exception
  */
 void fault_handler(struct isr_state state)
@@ -95,6 +102,7 @@ void fault_handler(struct isr_state state)
 
 /**
  * @brief Handles hardware interrupts
+ * 
  * @param state State of the stack on interrupt
  */
 void irq_handler(struct isr_state state)

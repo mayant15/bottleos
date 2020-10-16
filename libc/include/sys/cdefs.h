@@ -4,8 +4,9 @@
  */
 
 #ifndef _SYS_CDEFS_H
-#define _SYS_CDEFS_H 1
+#define _SYS_CDEFS_H
 
-#define __bottleos_libc 1
+/** @brief Defined if building as libc */
+#define __bottleos_libc
 
 #endif

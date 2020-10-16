@@ -1,3 +1,8 @@
+/**
+ * @file tty.c
+ * @brief Implementation of kernel/tty.h for VGA devices
+ */
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -7,29 +12,31 @@
 
 #include "vga.h"
 
-/** Width of the VGA display */
+/** @brief Width of the VGA display */
 static const size_t VGA_WIDTH = 80;
 
-/** Height of the VGA display */
+/** @brief Height of the VGA display */
 static const size_t VGA_HEIGHT = 25;
 
-/** Pointer to where the terminal buffer should start */
+/** @brief Pointer to where the terminal buffer should start */
 static uint16_t *const VGA_MEMORY = (uint16_t *)0xB8000;
 
-/** Currently active terminal row */
+/** @brief Currently active terminal row */
 static size_t terminal_row;
 
-/** Currently active terminal column */
+/** @brief Currently active terminal column */
 static size_t terminal_column;
 
-/** 8-bit VGA color information for the currently active color */
+/** @brief 8-bit VGA color information for the currently active color */
 static uint8_t terminal_color;
 
-/** Pointer to the active terminal buffer */
+/** @brief Pointer to the active terminal buffer */
 static uint16_t *terminal_buffer;
 
 /**
- * @brief Set the terminal color
+ * @brief Set the active terminal color
+ * 
+ * @param color A VGA color byte
  */
 void terminal_setcolor(uint8_t color)
 {
@@ -38,6 +45,11 @@ void terminal_setcolor(uint8_t color)
 
 /**
  * @brief Put a character at the specified coordinate
+ * 
+ * @param c     Character to write
+ * @param color VGA color byte to use
+ * @param x     Horizontal position to place the character at
+ * @param y     Vertical position to place the character at
  */
 void terminal_putentry_at(unsigned char c, uint8_t color, size_t x, size_t y)
 {

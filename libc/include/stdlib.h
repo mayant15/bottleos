@@ -1,5 +1,10 @@
+/**
+ * @file stdlib.h
+ * @brief Defined core features for the library
+ */
+
 #ifndef _STDLIB_H
-#define _STDLIB_H 1
+#define _STDLIB_H
 
 #include <sys/cdefs.h>
 
@@ -8,7 +13,8 @@ extern "C"
 {
 #endif
 
-    __attribute__((__noreturn__)) void abort(void);
+    /** @brief Terminate the process or initiate kernel panic */
+    __attribute__((__noreturn__)) void abort();
 
 #ifdef __cplusplus
 }

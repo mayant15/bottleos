@@ -1,11 +1,14 @@
-#ifndef ARCH_I386_VGA_H
-#define ARCH_I386_VGA_H
+/**
+ * @file vga.h
+ * @brief Constructs for dealing with VGA terminals
+ */
+
+#ifndef _ARCH_I386_VGA_H
+#define _ARCH_I386_VGA_H
 
 #include <stdint.h>
 
-/**
- * @brief Color constants for VGA text mode
- */
+/** @brief Color constants for VGA text mode */
 enum vga_color
 {
     VGA_COLOR_BLACK = 0,
@@ -24,7 +27,6 @@ enum vga_color
     VGA_COLOR_LIGHT_MAGENTA = 13,
     VGA_COLOR_LIGHT_BROWN = 14,
     VGA_COLOR_WHITE = 15,
-
 };
 
 /**
@@ -53,4 +55,4 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
     return (uint16_t) uc | (uint16_t) color << 8;
 }
 
-#endif // ARCH_I386_VGA_H
+#endif // _ARCH_I386_VGA_H

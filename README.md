@@ -25,6 +25,9 @@ Teaching myself OS internals by building a kernel.
 qemu-system-i386 -kernel sysroot/boot/bottleos.kernel
 ```
 
+## Documentation
+The complete documentation can be found [here](https://mayantmukul.me/bottleos/)
+
 ## References
 - https://wiki.osdev.org/Main_Page
 - http://www.osdever.net/tutorials
