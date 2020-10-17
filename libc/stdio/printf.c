@@ -4,109 +4,171 @@
 #include <stdio.h>
 #include <string.h>
 
-static bool print(const char *data, size_t length)
+
+#define MAX_DIGITS 32
+
+static const char ALPHABET[] = "0123456789ABCDEF";
+static char int_buf[MAX_DIGITS + 1];
+
+static bool contiguous_print(const char *data, size_t length)
 {
     const unsigned char *bytes = (const unsigned char *)data;
     for (size_t i = 0; i < length; i++)
+    {
         if (putchar(bytes[i]) == EOF)
+        {
             return false;
+        }
+    }
+        
     return true;
 }
 
-int printf(const char *restrict format, ...)
+// TODO: Support negative numbers
+static char* itoa(unsigned int val, unsigned int base)
+{
+    if (base < 2 || base > 16)
+    {
+        return NULL;
+    }
+
+    int_buf[MAX_DIGITS] = '\0';
+    if (val == 0)
+    {
+        int_buf[MAX_DIGITS - 1] = '0';
+        return (int_buf + MAX_DIGITS - 1);
+    }
+
+    int len = 0;
+    while (val != 0)
+    {
+        len++;
+        int_buf[MAX_DIGITS - len] = ALPHABET[val % base];
+        val = val / base;
+    }
+
+    if (base == 16)
+    {
+        int_buf[MAX_DIGITS - len - 1] = 'x';
+        int_buf[MAX_DIGITS - len - 2] = '0';
+        len += 2;
+    }
+
+    return (int_buf + MAX_DIGITS - len);
+}
+
+int printf(const char *__restrict format, ...)
 {
     va_list parameters;
     va_start(parameters, format);
 
     int written = 0;
-
-    while (*format != '\0')
+    while (format[0] != '\0')
     {
-        size_t maxrem = INT_MAX - written;
+        long unsigned int maxrem = INT_MAX - written;
 
-        if (format[0] != '%' || format[1] == '%')
+        // Handle % placeholders
+        if (format[0] == '%')
         {
+            format++;
             if (format[0] == '%')
+            {
+                if (maxrem < sizeof (char))
+                {
+                    // TODO: Buffer overflow
+                    return -1;
+                }
+
+                if (putchar('%') == EOF)
+                {
+                    return -1;
+                }
+
                 format++;
-            size_t amount = 1;
-            while (format[amount] && format[amount] != '%')
-                amount++;
-            if (maxrem < amount)
-            {
-                // TODO: Set errno to EOVERFLOW.
-                return -1;
+                written++;
             }
-            if (!print(format, amount))
-                return -1;
-            format += amount;
-            written += amount;
-            continue;
-        }
-
-        const char *format_begun_at = format++;
-
-        if (*format == 'c')
-        {
-            format++;
-            char c = (char) va_arg(parameters, int /* char promotes to int */);
-            if (!maxrem)
+            else if (format[0] == 'c')
             {
-                // TODO: Set errno to EOVERFLOW.
-                return -1;
+                if (maxrem < sizeof (char))
+                {
+                    // TODO: Buffer overflow
+                    return -1;
+                }
+
+                char c = (char) va_arg(parameters, int);
+                if (putchar(c) == EOF)
+                {
+                    return -1;
+                }
+
+                format++;
+                written++;
             }
-            if (!print(&c, sizeof(c)))
-                return -1;
-            written++;
-        }
-
-        else if (*format == 'd')
-        {
-            format++;
-            int d = va_arg(parameters, int);
-            while (d != 0)
+            else if (format[0] == 'd' || format[0] == 'X')
             {
-                char c = (d % 10) + '0';
-                d = d / 10;
-                if (!maxrem)
+                int d = va_arg(parameters, int);
+                int base = (format[0] == 'd') ? 10 : 16;
+                char* ch = itoa(d, base);
+                if (ch == NULL)
+                {
+                    // TODO: Bad argument exception
+                    return -1;
+                }
+
+                size_t len = MAX_DIGITS + int_buf - ch;
+                if (maxrem < len)
+                {
+                    // TODO: Overflow
+                    return -1;
+                }
+
+                if (!contiguous_print(ch, len))
+                {
+                    return -1;
+                }
+
+                written += len;
+                format++;
+            }
+            else if (format[0] == 's')
+            {
+                const char *str = va_arg(parameters, const char *);
+                size_t len = strlen(str);
+                if (maxrem < len)
                 {
                     // TODO: Set errno to EOVERFLOW.
                     return -1;
                 }
-                if (!print(&c, sizeof (c)))
+
+                if (!contiguous_print(str, len))
                 {
                     return -1;
                 }
-                written++;
+
+                written += len;
+                format++;
             }
-            putchar('0');
-        }
-        else if (*format == 's')
-        {
-            format++;
-            const char *str = va_arg(parameters, const char *);
-            size_t len = strlen(str);
-            if (maxrem < len)
+            else
             {
-                // TODO: Set errno to EOVERFLOW.
-                return -1;
+                // NOTE: Unknown % placeholders are silently ignored for now
+                // TODO: Implement more parsing
+                format++;
             }
-            if (!print(str, len))
-                return -1;
-            written += len;
         }
         else
         {
-            format = format_begun_at;
-            size_t len = strlen(format);
-            if (maxrem < len)
+            if (maxrem < sizeof (char))
             {
-                // TODO: Set errno to EOVERFLOW.
                 return -1;
             }
-            if (!print(format, len))
+
+            if (putchar(*format) == EOF)
+            {
                 return -1;
-            written += len;
-            format += len;
+            }
+
+            format++;
+            written++;
         }
     }
 

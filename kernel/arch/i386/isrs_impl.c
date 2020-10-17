@@ -24,7 +24,7 @@
 
 
 /** @brief Brief error messages printed out when an exception occurs */
-const char *exception_msg[] = {
+static const char *exception_msg[] = {
     "Division By Zero",
     "Debug",
     "Non Maskable Interrupt",
@@ -62,9 +62,9 @@ const char *exception_msg[] = {
     "Reserved"};
 
 /** @internal Print the state of the stack when an exception was called */
-void print_stack(struct isr_state *state)
+static void dump_stack(struct isr_state *state)
 {
-    printf("Stack: gs: %d, fs: %d, es: %d, ds: %d, edi: %d, esi: %d, ebp: %d, esp: %d, ebx: %d, edx: %d, ecx: %d, eax: %d, id: %d, err: %d, eip: %d, cs: %d, eflags: %d, usresp: %d, ss: %d",
+    printf("Stack:\nGS: %X, FS: %X, ES: %X, DS: %X\nEDI: %X, ESI: %X, EBP: %X, ESP: %X\nEBX: %X, EDX: %X, ECX: %X, EAX: %X\nEIP: %X, CS: %X, EFLAGS: %X, USRESP: %X, SS: %X\n",
            state->gs,
            state->fs,
            state->es,
@@ -77,8 +77,6 @@ void print_stack(struct isr_state *state)
            state->edx,
            state->ecx,
            state->eax,
-           state->id,
-           state->err_code,
            state->eip,
            state->cs,
            state->eflags,
@@ -93,10 +91,16 @@ void print_stack(struct isr_state *state)
  */
 void fault_handler(struct isr_state state)
 {
+    printf("Exception [AT %X][ID %X][ERROR CODE %X]: ", state.eip, state.id, state.err_code);
     if (state.id < 32)
     {
         puts(exception_msg[state.id]);
     }
+    else
+    {
+        puts("Unknown");
+    }
+    dump_stack(&state);
     abort();
 }
 

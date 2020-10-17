@@ -76,6 +76,15 @@ void terminal_initialize(void)
 void terminal_putchar(char c)
 {
     unsigned char uc = c;
+    if (uc == '\n')
+    {
+        terminal_column = 0;
+        if (++terminal_row == VGA_HEIGHT)
+        {
+            terminal_row = 0;
+        }
+    }
+
     terminal_putentry_at(uc, terminal_color, terminal_column, terminal_row);
     if (++terminal_column == VGA_WIDTH)
     {

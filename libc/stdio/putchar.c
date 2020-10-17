@@ -8,8 +8,7 @@ int putchar(int ic)
 {
 #if defined(__is_libk)
     // If this is called as a freestanding library, then use the kernel's tty utilities
-    char c = (char) ic;
-    terminal_write(&c, sizeof(c));
+    terminal_putchar((char) ic);
 #else
     // TODO: Implement stdio and the write system call.
 #endif
