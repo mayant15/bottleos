@@ -4,8 +4,26 @@ Teaching myself OS internals by building a kernel.
 
 ## Build
 
-- **Requirements**
-    - Rust Nightly
+Get build requirements
+```sh
+# Use Rust nightly for experimental features
+rustup override set nightly
+
+# Recompile core libraries
+rustup component add rust-src
+
+# For using the bootloader package
+rustup component add llvm-tools-preview
+```
+
+Build with `cargo`
+```sh
+# Build the kernel itself
+cargo build
+
+# Or build a bootimage
+cargo bootimage
+```
 
 ## Documentation
 The complete documentation can be found [here](https://mayantmukul.me/bottleos/)

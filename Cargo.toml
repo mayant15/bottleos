@@ -4,5 +4,9 @@ version = "0.1.0"
 authors = ["Mayant Mukul <mayantmukul@outlook.in>"]
 edition = "2018"
 
+[[bin]]
+name = "bottleos"
+path = "kernel/main.rs"
+
 [dependencies]
 bootloader = "0.9.11"
