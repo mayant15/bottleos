@@ -1,4 +1,5 @@
 # BottleOS
+![Rust](https://github.com/mayant15/bottleos/workflows/Rust/badge.svg)
 
 Teaching myself OS internals by building a kernel.
 
