@@ -15,4 +15,4 @@ jobs:
           toolchain: nightly
           override: true
       - name: Build docs
-        run: cargo docs
+        run: cargo doc
