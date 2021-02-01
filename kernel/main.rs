@@ -80,8 +80,3 @@ fn test_runner(tests: &[&dyn Testable]) {
 fn should_pass() {
     assert_eq!(1, 1);
 }
-
-#[test_case]
-fn should_fail() {
-    assert_eq!(1, 0);
-}
