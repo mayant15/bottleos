@@ -11,6 +11,10 @@ path = "kernel/lib.rs"
 name = "bottleos"
 path = "kernel/main.rs"
 
+[[test]]
+name = "should_panic"
+harness = false
+
 [dependencies]
 bootloader = "0.9.11"
 volatile = "0.2.6"
