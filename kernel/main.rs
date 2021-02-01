@@ -51,26 +51,37 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
     }
 }
 
+pub trait Testable {
+    fn run(&self) -> ();
+}
+
+impl<T> Testable for T
+where
+    T: Fn(),
+{
+    fn run(&self) {
+        sprint!("{}\t", core::any::type_name::<T>());
+        self();
+        sprintln!("[ok]");
+    }
+}
+
 #[cfg(test)]
-fn test_runner(tests: &[&dyn Fn()]) {
+fn test_runner(tests: &[&dyn Testable]) {
     sprintln!("Running {} tests", tests.len());
     for test in tests {
-        test();
+        test.run();
     }
 
     exit_qemu(QemuExitCode::Success);
 }
 
 #[test_case]
-fn test_should_pass() {
-    sprint!("this should pass... ");
+fn should_pass() {
     assert_eq!(1, 1);
-    sprintln!("[ok]");
 }
 
 #[test_case]
-fn test_should_fail() {
-    sprint!("this should fail... ");
+fn should_fail() {
     assert_eq!(1, 0);
-    sprintln!("[ok]");
 }
