@@ -1,4 +1,4 @@
-name: Rust
+name: build
 
 on:
   push:
@@ -11,10 +11,12 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
+    - name: Prepare environment
+      run: chmod +x ci/toolchain.sh && source ./ci/toolchain.sh
     - name: Build
-      run: chmod +x ci/build.sh && source ./ci/build.sh
+      run: cargo build --verbose
+    - name: Test
+      run: cargo test --verbose
