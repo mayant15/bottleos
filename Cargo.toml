@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["Mayant Mukul <mayantmukul@outlook.in>"]
 edition = "2018"
 
+[lib]
+path = "kernel/lib.rs"
+
 [[bin]]
 name = "bottleos"
 path = "kernel/main.rs"
