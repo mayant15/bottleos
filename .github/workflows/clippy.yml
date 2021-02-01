@@ -10,7 +10,7 @@ jobs:
         with:
           toolchain: nightly
           override: true
-          components: clippy
+          components: clippy, rust-src, llvm-tools-preview
       - name: Check
         uses: actions-rs/clippy-check@v1.0.7
         with:
