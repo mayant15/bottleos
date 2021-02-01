@@ -1,5 +1,6 @@
 # BottleOS
 ![build](https://github.com/mayant15/bottleos/workflows/build/badge.svg)
+![clippy](https://github.com/mayant15/bottleos/workflows/clippy/badge.svg)
 
 Teaching myself OS internals by building a kernel.
 
