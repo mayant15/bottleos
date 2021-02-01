@@ -1,0 +1,18 @@
+name: clippy
+on: pull_request
+jobs:
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          toolchain: nightly
+          override: true
+          components: clippy, rust-src, llvm-tools-preview
+      - name: Check
+        uses: actions-rs/clippy-check@v1.0.7
+        with:
+          token: ${{ secrets.GH_REPO_TOKEN }}
+          toolchain: nightly
