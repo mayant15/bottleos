@@ -1,1 +1,4 @@
 target/
+
+# Don't pin dependencies as everything is nightly
+Cargo.lock
