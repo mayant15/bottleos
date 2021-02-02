@@ -14,9 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Prepare environment
-      run: chmod +x ci/toolchain.sh && source ./ci/toolchain.sh
-    - name: Build
-      run: cargo build --verbose
-    - name: Test
+    - name: Install toolchain
+      uses: actions-rs/toolchain@v1.0.6
+      with:
+        toolchain: nightly
+        override: true
+        components: rust-src, llvm-tools-preview
+    - name: Install bootimage
+      run: cargo install bootimage
+    - name: Install QEMU
+      run: sudo apt install -y qemu-system-x86
+    - name: Build and test
       run: cargo test --verbose
