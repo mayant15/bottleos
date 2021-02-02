@@ -15,11 +15,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install toolchain
-        uses: actions-rs/toolchain@v1.0.6
-        with:
-          toolchain: nightly
-          override: true
-          components: rust-src, llvm-tools-preview
+      uses: actions-rs/toolchain@v1.0.6
+      with:
+        toolchain: nightly
+        override: true
+        components: rust-src, llvm-tools-preview
     - name: Install bootimage
       run: cargo install bootimage
     - name: Install QEMU
