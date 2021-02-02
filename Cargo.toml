@@ -1,8 +1,18 @@
 [package]
 name = "bottleos"
-version = "0.1.0"
-authors = ["Mayant Mukul <mayantmukul@outlook.in>"]
+description = "A bare-bones kernel created to teach myself OS internals"
+version = "0.0.1"
+homepage = "https://github.com/mayant15/bottleos"
+documentation = "https://github.com/mayant15/bottleos"
+repository = "https://github.com/mayant15/bottleos"
+readme = "README.md"
+authors = ["mayant15"]
+license = "MIT"
+license-file = "LICENSE"
 edition = "2018"
+exclude = [
+    ".github/*"
+]
 
 [lib]
 path = "kernel/lib.rs"
