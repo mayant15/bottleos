@@ -17,14 +17,14 @@ pub extern "C" fn _start() -> ! {
     test_main();
 
     kprintln!("Kernel did not crash. Phew.");
-    loop {}
+    bottleos::hlt_loop();
 }
 
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     kprintln!("{}", info);
-    loop {}
+    bottleos::hlt_loop();
 }
 
 #[cfg(test)]
