@@ -11,9 +11,12 @@ use bottleos::kprintln;
 pub extern "C" fn _start() -> ! {
     kprintln!("Hello kernel world!");
 
+    bottleos::init();
+
     #[cfg(test)]
     test_main();
 
+    kprintln!("Kernel did not crash. Phew.");
     loop {}
 }
 
