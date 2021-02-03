@@ -8,7 +8,6 @@ repository = "https://github.com/mayant15/bottleos"
 readme = "README.md"
 authors = ["mayant15"]
 license = "MIT"
-license-file = "LICENSE"
 edition = "2018"
 exclude = [
     ".github/*"
