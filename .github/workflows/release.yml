@@ -1,0 +1,45 @@
+name: release
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          toolchain: nightly
+          override: true
+          components: rust-src, llvm-tools-preview
+      - name: Install bootimage
+        run: cargo install bootimage
+      - name: Build a bootimage
+        run: cargo bootimage --verbose
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: BottleOS ${{ github.ref }}
+          draft: false
+          prerelease: true
+      - name: Upload release assets
+        id: upload_release_asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./target/x86_64-cargo-target/debug/bootimage-bottleos.bin
+          asset_name: x86_64_bootimage.bin
+          asset_content_type: application/octet-stream
+      - name: Push to crates.io
+        run: |
+          cargo package --verbose
+          cargo publish --token ${{ secrets.CRATESIO_TOKEN }}
