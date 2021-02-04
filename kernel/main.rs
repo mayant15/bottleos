@@ -4,6 +4,9 @@
 #![test_runner(bottleos::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+extern crate alloc;
+
+use alloc::{boxed::Box, rc::Rc, vec, vec::Vec};
 use bootloader::{entry_point, BootInfo};
 use bottleos::kprintln;
 use core::panic::PanicInfo;
@@ -11,9 +14,9 @@ use core::panic::PanicInfo;
 entry_point!(kernel_main);
 
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
-    use bottleos::memory;
-    use bottleos::memory::BootInfoFrameAllocator;
-    use x86_64::{structures::paging::Page, VirtAddr};
+    use bottleos::allocator;
+    use bottleos::memory::{self, BootInfoFrameAllocator};
+    use x86_64::VirtAddr;
 
     kprintln!("Hello kernel world!");
     bottleos::init();
@@ -23,12 +26,28 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
 
     let mut frame_allocator = unsafe { BootInfoFrameAllocator::init(&boot_info.memory_map) };
 
-    // map an unused page
-    let page = Page::containing_address(VirtAddr::new(0));
-    memory::create_example_mapping(page, &mut mapper, &mut frame_allocator);
+    allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
 
-    let page_ptr: *mut u64 = page.start_address().as_mut_ptr();
-    unsafe { page_ptr.offset(400).write_volatile(0x_f021_f077_f065_f04e) };
+    let heap_value = Box::new(41);
+    kprintln!("heap_value at {:p}", heap_value);
+
+    let mut vec = Vec::new();
+    for i in 0..500 {
+        vec.push(i);
+    }
+    kprintln!("vec at {:p}", vec.as_slice());
+
+    let reference_counted = Rc::new(vec![1, 2, 3]);
+    let cloned_reference = reference_counted.clone();
+    kprintln!(
+        "current reference count is {}",
+        Rc::strong_count(&cloned_reference)
+    );
+    core::mem::drop(reference_counted);
+    kprintln!(
+        "reference count is {} now",
+        Rc::strong_count(&cloned_reference)
+    );
 
     #[cfg(test)]
     test_main();
