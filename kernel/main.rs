@@ -33,8 +33,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     test_main();
     
     kprintln!(">> Starting kernel processes...");
-    let sched = proc::Scheduler::new();
-    sched.start();
+    proc::start();
 }
 
 #[cfg(not(test))]
