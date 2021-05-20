@@ -34,3 +34,5 @@ The complete documentation can be found [here](https://mayantmukul.me/bottleos/)
 - https://wiki.osdev.org/Main_Page
 - http://www.osdever.net/tutorials
 - https://os.phil-opp.com/
+- https://www.os-book.com/OS9/
+
