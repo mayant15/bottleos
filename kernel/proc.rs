@@ -73,6 +73,12 @@ impl Scheduler {
     }
 }
 
+impl Default for Scheduler {
+    fn default() -> Self {
+        Scheduler::new()
+    }
+}
+
 impl Process {
     pub fn new(task: impl Fn()) -> Self {
         // Add task to queue
