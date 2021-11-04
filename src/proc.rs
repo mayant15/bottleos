@@ -157,27 +157,4 @@ impl Scheduler {
     }
 }
 
-#[test_case]
-fn test_scheduler_get_next_pid() {
-    let mut guard = SCHEDULER.lock();
-    assert_eq!(0, guard.get_next_pid());
-    guard.next_pid += 1;
-    assert_eq!(1, guard.get_next_pid());
-}
-
-#[test_case]
-fn test_scheduler_register_process() {
-    let mut guard = SCHEDULER.lock();
-    let block = ProcessBlock {
-        pid: 0,
-        state: ProcessState::Start,
-    };
-    guard.jobs.push_back(block);
-
-    assert_eq!(1, guard.jobs.len());
-
-    let back = guard.jobs.back();
-    assert!(back.is_some());
-    assert_eq!(0, back.unwrap().pid);
-    assert_eq!(ProcessState::Start, back.unwrap().state);
-}
+// TODO: Unit tests for this

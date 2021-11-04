@@ -6,17 +6,16 @@
 
 extern crate alloc;
 
-use bottleos::allocator::HEAP_SIZE;
 use alloc::boxed::Box;
 use alloc::vec::Vec;
 use bootloader::{entry_point, BootInfo};
+use bottleos::memory::allocator::HEAP_SIZE;
 use core::panic::PanicInfo;
 
 entry_point!(main);
 
 fn main(boot_info: &'static BootInfo) -> ! {
-    use bottleos::allocator;
-    use bottleos::memory::{self, BootInfoFrameAllocator};
+    use bottleos::memory::{self, allocator, BootInfoFrameAllocator};
     use x86_64::VirtAddr;
 
     bottleos::init();
