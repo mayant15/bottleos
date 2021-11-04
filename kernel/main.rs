@@ -7,7 +7,7 @@
 extern crate alloc;
 
 use bootloader::{entry_point, BootInfo};
-use bottleos::kprintln;
+use bottleos::{kprint, kprintln};
 use core::panic::PanicInfo;
 
 entry_point!(kernel_main);
@@ -18,21 +18,19 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     use bottleos::proc;
     use x86_64::VirtAddr;
 
-    kprintln!(">> Initializing kernel...");
+    kprint!(">> Initializing kernel...");
     bottleos::init();
-    kprintln!(">>    [ok!]");
+    kprintln!(" [ok!]");
 
-    kprintln!(">> Initializing heap memory...");
+    kprint!(">> Initializing heap memory...");
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
     let mut mapper = unsafe { memory::init(phys_mem_offset) };
     let mut frame_allocator = unsafe { BootInfoFrameAllocator::init(&boot_info.memory_map) };
     allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
-    kprintln!(">>    [ok!]");
+    kprintln!(" [ok!]");
 
     #[cfg(test)]
     test_main();
-    
-    kprintln!(">> Starting kernel processes...");
     proc::start();
 }
 
