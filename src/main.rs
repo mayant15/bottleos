@@ -13,8 +13,7 @@ use core::panic::PanicInfo;
 entry_point!(kernel_main);
 
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
-    use bottleos::allocator;
-    use bottleos::memory::{self, BootInfoFrameAllocator};
+    use bottleos::memory::{self, allocator, BootInfoFrameAllocator};
     use bottleos::proc;
     use x86_64::VirtAddr;
 

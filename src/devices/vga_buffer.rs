@@ -134,7 +134,7 @@ lazy_static! {
 
 #[macro_export]
 macro_rules! kprint {
-    ($($arg:tt)*) => ($crate::vga_buffer::_kprint(format_args!($($arg)*)));
+    ($($arg:tt)*) => ($crate::devices::vga_buffer::_kprint(format_args!($($arg)*)));
 }
 
 #[macro_export]

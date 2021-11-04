@@ -26,13 +26,13 @@ pub fn _sprint(args: core::fmt::Arguments) {
 #[macro_export]
 macro_rules! sprint {
     ($($arg:tt)*) => {
-        $crate::serial::_sprint(format_args!($($arg)*));
+        $crate::devices::serial::_sprint(format_args!($($arg)*));
     }
 }
 
 #[macro_export]
 macro_rules! sprintln {
-    () => ($crate::serial_print!("\n"));
+    () => ($crate::sprint!("\n"));
     ($fmt:expr) => ($crate::sprint!(concat!($fmt, "\n")));
     ($fmt:expr, $($arg:tt)*) => ($crate::sprint!(concat!($fmt, "\n"), $($arg)*));
 }

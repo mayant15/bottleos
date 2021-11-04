@@ -13,13 +13,6 @@ exclude = [
     ".github/*"
 ]
 
-[lib]
-path = "kernel/lib.rs"
-
-[[bin]]
-name = "bottleos"
-path = "kernel/main.rs"
-
 [[test]]
 name = "should_panic"
 harness = false
