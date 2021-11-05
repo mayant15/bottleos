@@ -6,6 +6,8 @@ Teaching myself OS internals by building a kernel.
 
 ## Build
 
+Assembly files must be compiled with NASM.
+
 Get build requirements
 ```sh
 # Use Rust nightly for experimental features
