@@ -7,14 +7,29 @@
 
 ; Make NASM export this symbol in the object file, so that the
 ; linker can see it.
-
 global _start
+
+; Static section, reserve memory but don't initialize them here.
+; This needs to be page aligned at 4KB to make sure our page tables
+; fit perfectly in a page each.
+section .bss
+align 4096
+
+; 4-levels of page tables, default for x86. Each table is 4KB.
+p4_table:
+    resb 4096
+p3_table:
+    resb 4096
+p2_table:
+    resb 4096
+p1_table:
+    resb 4096
+
 
 ; GRUB does not setup the stack. We need to reserve a stack for 
 ; this program, but we don't need to do it in the executable itself,
 ; that will just bloat it. Instead we can use an NASM pseudo-instruction
 ; called `res*`, to reserve memory when GRUB is loading this executable.
-section .bss
 stack_bottom:
     ; Reserve 64 bytes
     resb 64
@@ -55,7 +70,7 @@ _start:
     hlt
 
 ;==============================================================================
-; Helper functions for validation
+; Helper functions for detecting platform features
 ;
 ; Check if the platform supports required features. There functions print an
 ; error code and halt the booting process if something goes wrong.
@@ -144,3 +159,9 @@ check_long_mode:
 .error_long_mode:
     mov byte al, 0x2
     jmp error
+
+;==============================================================================
+; Helper functions to setup paging
+;==============================================================================
+
+
