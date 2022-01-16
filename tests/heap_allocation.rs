@@ -1,3 +1,8 @@
+fn main() -> ! {
+    loop {}
+}
+
+/*
 #![no_std]
 #![no_main]
 #![feature(custom_test_frameworks)]
@@ -58,3 +63,4 @@ fn many_boxes() {
         assert_eq!(*x, i);
     }
 }
+*/

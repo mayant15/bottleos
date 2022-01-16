@@ -74,6 +74,7 @@ impl Process {
 fn process_1_body() {
     kprintln!("This is process 1!");
 
+    /*
     let heap_value = Box::new(41);
     kprintln!("heap_value at {:p}", heap_value);
 
@@ -82,11 +83,13 @@ fn process_1_body() {
         vec.push(i);
     }
     kprintln!("vec at {:p}", vec.as_slice());
+    */
 }
 
 fn process_2_body() {
     kprintln!("This is process 2!");
 
+    /*
     let reference_counted = Rc::new(vec![1, 2, 3]);
     let cloned_reference = reference_counted.clone();
     kprintln!(
@@ -99,6 +102,7 @@ fn process_2_body() {
         "reference count is {} now",
         Rc::strong_count(&cloned_reference)
     );
+    */
 }
 
 fn create_kernel_processes() {

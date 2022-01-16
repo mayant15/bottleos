@@ -2,3 +2,9 @@ target/
 
 # Don't pin dependencies as everything is nightly
 Cargo.lock
+
+*.iso
+*.o
+*.a
+*.d
+

@@ -6,15 +6,16 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-extern crate alloc;
+// extern crate alloc;
 
 use core::panic::PanicInfo;
 
+pub mod stivale2;
 pub mod devices;
 pub mod gdt;
 pub mod interrupts;
-pub mod memory;
-pub mod proc;
+// pub mod memory;
+// pub mod proc;
 
 pub fn init() {
     gdt::init();
@@ -29,10 +30,12 @@ pub fn hlt_loop() -> ! {
     }
 }
 
+/*
 #[alloc_error_handler]
 fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
     panic!("allocation error: {:?}", layout)
 }
+*/
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
