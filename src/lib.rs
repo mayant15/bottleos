@@ -12,13 +12,13 @@ use core::panic::PanicInfo;
 
 pub mod stivale2;
 pub mod devices;
-pub mod gdt;
+// pub mod gdt;
 pub mod interrupts;
 // pub mod memory;
 // pub mod proc;
 
 pub fn init() {
-    gdt::init();
+    // gdt::init();
     interrupts::init_idt();
     unsafe { interrupts::PICS.lock().initialize() };
     x86_64::instructions::interrupts::enable();
@@ -85,13 +85,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 }
 
 #[cfg(test)]
-use bootloader::{entry_point, BootInfo};
-
-#[cfg(test)]
-entry_point!(test_kernel_main);
-
-#[cfg(test)]
-fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
+pub extern "C" fn _start(_ptr: u64) -> ! {
     init();
     test_main();
     hlt_loop();
