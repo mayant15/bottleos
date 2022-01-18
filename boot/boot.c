@@ -104,6 +104,16 @@ void stivale2_term_write(const char* string, size_t length) {
     term_write(string, length);
 }
 
+void stivale2_term_write_str(const char* string) {
+    size_t length = 0;
+    const char* i = string;
+    while (*i != '\0') {
+        i++;
+        length++;
+    }
+    stivale2_term_write(string, length);
+}
+
 
 int8_t stivale2_init(uint64_t ptr) {
     struct stivale2_struct *stivale2_struct = (struct stivale2_struct*) ptr;
@@ -125,6 +135,12 @@ int8_t stivale2_init(uint64_t ptr) {
     // matches the prototype described in the stivale2 specification for
     // the stivale2_term_write function.
     term_write = term_write_ptr;
+
+    stivale2_term_write("Bootloader: ", 12);
+    stivale2_term_write_str(stivale2_struct->bootloader_brand);
+    stivale2_term_write(" ", 1);
+    stivale2_term_write_str(stivale2_struct->bootloader_version);
+    stivale2_term_write("\n", 1);
 
     return 0;
 }
