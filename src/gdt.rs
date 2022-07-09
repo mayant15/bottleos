@@ -1,4 +1,5 @@
 use lazy_static::lazy_static;
+use x86_64::registers::segmentation::{CS, DS, Segment};
 use x86_64::structures::gdt::{Descriptor, GlobalDescriptorTable, SegmentSelector};
 use x86_64::structures::tss::TaskStateSegment;
 use x86_64::VirtAddr;
@@ -19,33 +20,44 @@ lazy_static! {
     };
 }
 
+struct Selectors {
+    code: SegmentSelector,
+    data: SegmentSelector,
+    tss: SegmentSelector,
+}
+
 lazy_static! {
+    /// Global GDT instance. This is required because the structure must have a static lifetime
     static ref GDT: (GlobalDescriptorTable, Selectors) = {
         let mut gdt = GlobalDescriptorTable::new();
-        let code_selector = gdt.add_entry(Descriptor::kernel_code_segment());
-        let tss_selector = gdt.add_entry(Descriptor::tss_segment(&TSS));
+
+    // NOTE: I do not need to add a null descriptor myself
+    // https://docs.rs/x86_64/latest/x86_64/structures/gdt/struct.GlobalDescriptorTable.html
+        let code = gdt.add_entry(Descriptor::kernel_code_segment());
+        let data = gdt.add_entry(Descriptor::kernel_data_segment());
+        let tss = gdt.add_entry(Descriptor::tss_segment(&TSS));
+
+        // Return the tuple
         (
             gdt,
             Selectors {
-                code_selector,
-                tss_selector,
+                code,
+                data,
+                tss,
             },
         )
     };
 }
 
-struct Selectors {
-    code_selector: SegmentSelector,
-    tss_selector: SegmentSelector,
-}
 
+/// Minimal GDT configuration with a TSS
 pub fn init() {
-    use x86_64::instructions::segmentation::set_cs;
-    use x86_64::instructions::tables::load_tss;
-
+    // Load the GDT
     GDT.0.load();
     unsafe {
-        set_cs(GDT.1.code_selector);
-        load_tss(GDT.1.tss_selector);
+        // Set GDT selectors to appropriate registers
+        CS::set_reg(GDT.1.code);
+        DS::set_reg(GDT.1.data);
+        // load_tss(GDT.1.tss_selector);
     }
 }

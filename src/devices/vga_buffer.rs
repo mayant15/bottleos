@@ -79,6 +79,9 @@ impl Writer {
     }
 
     pub fn write_string(&mut self, s: &str) {
+        crate::stivale2::write(s);
+
+        /*
         for byte in s.bytes() {
             // Check if the byte is printable ASCII, otherwise print
             // a fallback character
@@ -87,6 +90,7 @@ impl Writer {
                 _ => self.write_byte(0xfe),
             }
         }
+        */
     }
 
     fn new_line(&mut self) {

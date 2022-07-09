@@ -7,17 +7,19 @@
 // extern crate alloc;
 
 //use bootloader::{entry_point, BootInfo};
-use bottleos::{kprint, kprintln};
 use bottleos::stivale2;
+use bottleos::{kprint, kprintln};
 use core::panic::PanicInfo;
 
 // entry_point!(kernel_main);
 
-
 #[no_mangle]
 pub extern "C" fn _start(info_ptr: u64) -> ! {
     stivale2::init(info_ptr);
-    stivale2::write("Hello World!");
+
+    kprint!(">> Initializing kernel...");
+    bottleos::init();
+    kprint!(" [ok!]");
 
     loop {}
 }

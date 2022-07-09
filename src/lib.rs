@@ -10,18 +10,20 @@
 
 use core::panic::PanicInfo;
 
-pub mod stivale2;
 pub mod devices;
-// pub mod gdt;
+pub mod gdt;
 pub mod interrupts;
+pub mod stivale2;
 // pub mod memory;
 // pub mod proc;
 
 pub fn init() {
-    // gdt::init();
-    interrupts::init_idt();
-    unsafe { interrupts::PICS.lock().initialize() };
-    x86_64::instructions::interrupts::enable();
+    x86_64::instructions::interrupts::disable();
+    gdt::init();
+    // TODO: Enable these
+    // interrupts::init_idt();
+    // unsafe { interrupts::PICS.lock().initialize() };
+    // x86_64::instructions::interrupts::enable();
 }
 
 pub fn hlt_loop() -> ! {
